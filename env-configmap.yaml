@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: env-udagram
+data:
+  AWS_BUCKET: udagram-s3-prod
+  AWS_REGION: us-east-1
+  POSTGRES_HOST: thanhnhan.cranrrdtmky8.us-east-2.rds.amazonaws.com
+  JWT_SECRET: demo
+  AWS_PROFILE: default

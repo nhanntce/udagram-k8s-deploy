@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: udagram-api-user
+  labels:
+    app: udagram-api-user
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: udagram-api-user
+  template:
+    metadata:
+      labels:
+        app: udagram-api-user
+    spec:
+      containers:
+        - name: udagram-api-user
+          image: nhanntce/udagram-api-user:latest
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          envFrom: 
+            - configMapRef:
+                name: env-udagram
+            - secretRef:
+                name: env-udagram-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: udagram-api-user
+  labels:
+    app: udagram-api-user
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: udagram-api-user
+

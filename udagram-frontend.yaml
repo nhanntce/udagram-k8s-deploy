@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: udagram-frontend
+  labels:
+    app: udagram-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: udagram-frontend
+  template:
+    metadata:
+      labels:
+        app: udagram-frontend
+    spec:
+      containers:
+        - name: udagram-frontend
+          image: nhanntce/udagram-frontend:latest
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          envFrom: 
+            - configMapRef:
+                name: env-udagram
+            - secretRef:
+                name: env-udagram-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: udagram-frontend
+  labels:
+    app: udagram-frontend
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: http
+  type: LoadBalancer
+  selector:
+    app: udagram-frontend
+

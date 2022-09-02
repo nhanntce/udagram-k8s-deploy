@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: udagram-reverseproxy
+  labels:
+    app: udagram-reverseproxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: udagram-reverseproxy
+  template:
+    metadata:
+      labels:
+        app: udagram-reverseproxy
+    spec:
+      containers:
+        - name: udagram-reverseproxy
+          image: nhanntce/udagram-reverseproxy:latest
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          envFrom: 
+            - configMapRef:
+                name: env-udagram
+            - secretRef:
+                name: env-udagram-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: udagram-reverseproxy
+  labels:
+    app: udagram-reverseproxy
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  type: LoadBalancer
+  selector:
+    app: udagram-reverseproxy
+

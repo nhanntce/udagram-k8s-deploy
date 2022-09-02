@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: udagram-api-feed
+  labels:
+    app: udagram-api-feed
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: udagram-api-feed
+  template:
+    metadata:
+      labels:
+        app: udagram-api-feed
+    spec:
+      containers:
+        - name: udagram-api-feed
+          image: nhanntce/udagram-api-feed:latest
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          envFrom: 
+            - configMapRef:
+                name: env-udagram
+            - secretRef:
+                name: env-udagram-secret
+            - secretRef:
+                name: aws-udagram-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: udagram-api-feed
+  labels:
+    app: udagram-api-feed
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: udagram-api-feed
+
